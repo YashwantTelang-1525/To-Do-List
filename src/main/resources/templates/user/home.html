@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>User Home</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+
+<section>
+    <header class="text-gray-600 body-font">
+        <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+            <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+                <span class="ml-3 text-xl">ToDoList</span>
+            </a>
+            <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
+                <a class="mr-5 hover:text-gray-900" href="/user/">Home</a>
+                <a class="mr-5 hover:text-gray-900" href="/user/addToDo">Add</a>
+                <form action="/logout" method="post" style="display:inline;">
+                    <button type="submit" class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">LogOut</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+</section>
+
+<section class="text-gray-600 body-font">
+    <div class="container px-5 py-24 mx-auto">
+        
+        <!-- Next Task Section -->
+        <div class="mb-8">
+		    <h2 class="text-2xl font-bold mb-4">Your Next Task:</h2>
+		    <div th:if="${upcomingTask}" class="p-4 bg-indigo-100 rounded-lg">
+		        <h3 class="text-xl font-semibold" th:text="${upcomingTask.task}">Next Task Name</h3>
+		        <p class="text-gray-700">Priority: <span th:text="${upcomingTask.priority}">High</span></p>
+		        <p class="text-gray-700">Date: <span th:text="${#dates.format(upcomingTask.date, 'yyyy-MM-dd')}">Date</span></p>
+		        <br>
+		        <!-- Done Button -->
+		        <a th:href="@{/user/doneToDo/{id}(id=${upcomingTask.id})}"
+		           class="bg-green-500 text-white px-2 py-1 rounded" 
+		           onclick="return confirm('Mark this task as done?')">Done!</a>
+		    </div>
+		    <div th:if="${upcomingTask == null}" class="text-gray-500">No upcoming tasks.</div>
+		</div>
+
+
+        <!-- Remaining Tasks Section -->
+        <section class="text-gray-600 body-font">
+    <div class="container px-5 py-24 mx-auto">
+        <h2 class="text-2xl font-bold mb-4">Remaining Tasks:</h2>
+        <div th:if="${remainingTasks.empty}" class="text-gray-500">No remaining tasks.</div>
+        
+        <div class="flex flex-wrap -mx-4 -my-8">
+            <div th:each="todo : ${remainingTasks}" class="py-8 px-4 lg:w-1/3">
+                <div class="h-full flex items-start">
+                    
+                    <!-- Date Section -->
+                    <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
+                        <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200" th:text="${#dates.format(todo.date, 'MMM')}">Month</span>
+                        <span class="font-medium text-lg text-gray-800 title-font leading-none" th:text="${#dates.format(todo.date, 'dd')}">Day</span>
+                    </div>
+                    
+                    <!-- Task Details Section -->
+                    <div class="flex-grow pl-6">
+                    	<h2 class="tracking-widest text-xs title-font font-medium text-green-900 mb-1" >Priority :</h2>
+                        <h2 class="tracking-widest text-xs title-font font-medium text-indigo-700 mb-1" th:text="${todo.priority}">Priority</h2>
+                        <h2 class="tracking-widest text-xs title-font font-medium text-green-900 mb-1">Task :</h2>
+                        <h1 class="title-font text-xl font-medium text-gray-700 mb-3" th:text="${todo.task}">Task Name</h1>
+                         
+                        <!-- Edit and Delete Links -->
+                        <a th:href="@{/user/updateToDo/{id}(id=${todo.id})}" class="bg-yellow-500 text-white px-2 py-1 rounded mr-2">Edit</a>
+                        <a th:href="@{/user/deleteToDo/{id}(id=${todo.id})}" class="bg-red-500 text-white px-2 py-1 rounded" onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    </div>
+</section>
+
+</body>
+</html>
